@@ -15,28 +15,31 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     private var auth:FirebaseAuth? = null
     private val RC_SIGN_IN = 1
-    private lateinit var binding : ActivityLoginBinding
+    private lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         binding.progress.visibility = View.GONE
         binding.login.setOnClickListener(this)
         auth = FirebaseAuth.getInstance()
-        if(auth!!.currentUser == null){
-        } else {
-            intent = Intent(applicationContext,
-                MainActivity::class.java)
+
+        if(auth!!.currentUser == null) {
+        } else  {
+            intent = Intent(applicationContext, MainActivity::class.java)
             startActivity(intent)
             finish()
         }
     }
+
     override fun onClick(p0: View?) {
-// Choose authentication providers
+        // Choose authentication providers
         val providers = arrayListOf(
             AuthUI.IdpConfig.GoogleBuilder().build())
-// Create and launch sign-in intent
+
+        // Create and launch sign-in intent
         startActivityForResult(
             AuthUI.getInstance()
                 .createSignInIntentBuilder()
@@ -44,22 +47,20 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 .build(),
             RC_SIGN_IN)
     }
-    override fun onActivityResult(requestCode: Int, resultCode: Int,
-                                  data: Intent?) {
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?){
         super.onActivityResult(requestCode, resultCode, data)
+
         if (requestCode == RC_SIGN_IN) {
             val response = IdpResponse.fromResultIntent(data)
             if (resultCode == Activity.RESULT_OK) {
                 val user = FirebaseAuth.getInstance().currentUser
-                Toast.makeText(this, "Login Berhasil",
-                Toast.LENGTH_SHORT).show()
-                intent = Intent(applicationContext,
-                    MainActivity::class.java)
+                Toast.makeText(this, "Login Berhasil", Toast.LENGTH_SHORT).show()
+                intent = Intent(applicationContext, MainActivity::class.java)
                 startActivity(intent)
                 finish()
             } else {
-                Toast.makeText(this, "Login Dibatalkan",
-                Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Login Dibatalkan", Toast.LENGTH_SHORT).show()
             }
         }
     }
